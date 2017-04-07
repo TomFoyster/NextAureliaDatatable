@@ -1,0 +1,55 @@
+<template>
+  <require from="./renderer"></require>
+    <style>
+      next-datatable {
+        width: 100%;
+      }
+    </style>
+    <div class="row">
+      <div class="col">
+        <table class="${tableClass}">
+          <thead>
+            <tr>
+              <th repeat.for="column of columns" css.bind="column.style || null">${column.name}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr repeat.for="row of pagedData" click.delegate="rowClickHandler(row)">
+              <td repeat.for="column of columns">
+                <column-renderer model.bind="column" value.bind="row[column.field]"></column-renderer>
+              </td>
+            </tr>
+            <tr show.bind="totalItems == 0">
+              <td colspan="${columns.length > 0 ? columns.length : 1}">
+                No data
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" show.bind="pagedData.length > 0">
+      <div class="col">
+        Showing ${startItem} to ${endItem} of ${totalItems} rows
+      </div>
+      <div class="col d-flex justify-content-center datatable-pagination">
+        Page&nbsp;<input type="text" class="datatable-pagination--input" value.bind="page" blur.delegate="go()" keydown.trigger="numberCheck($event)"/>&nbsp;of ${totalPages}
+      </div>
+      <div class="col">
+        <ul class="pagination justify-content-end">
+          <li class="page-item ${page == 1 ? 'disabled' : ''  }">
+            <a class="page-link" href="#" click.delegate="first()">First</a>
+          </li>
+          <li class="page-item ${page == 1 ? 'disabled' : ''  }">
+            <a class="page-link" href="#" click.delegate="prev()">Previous</a>
+          </li>
+          <li class="page-item ${page >= totalPages? 'disabled' : ''}">
+            <a class="page-link" href="#" click.delegate="next()">Next</a>
+          </li>
+          <li class="page-item ${page >= totalPages? 'disabled' : ''}">
+            <a class="page-link" href="#" click.delegate="last()">Last</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</template>
